@@ -8,6 +8,8 @@
 | `Code.gs` | The Google Apps Script that writes responses to your Google Sheet. |
 
 ## Survey flow
+0. **Welcome**, then **Consent Terms**: a scrolling box of text, edited in `consent` in the config, with **I agree** and **I do not agree** buttons.
+   "I do not agree" ends the survey and sends nothing to the Sheet.
 1. **About you** (untimed): education, age, sex, ethnicity, how often they read charts
 2. **Reading charts** (timed): the 4 formats, each with 2 questions. The format order is random for each person.
 3. **Your experience** (untimed): an ease rating for each format, shown in the same order they were seen

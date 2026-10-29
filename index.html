@@ -222,16 +222,23 @@
     .hint { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; min-height: 1.2em; }
     .hint.error { color: var(--danger); }
 
-    .consent {
-      display: flex;
-      gap: 0.75rem;
-      align-items: flex-start;
+    /* Consent terms: scrolls inside the card when the text is long */
+    .consent-terms {
+      max-height: 50vh;
+      overflow-y: auto;
+      padding: 1.25rem 1.5rem;
       margin-bottom: 1.5rem;
-      color: var(--text-main);
-      line-height: 1.5;
-      cursor: pointer;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      user-select: text;
+      scrollbar-color: var(--border) transparent;
     }
-    .consent input { margin-top: 0.3rem; width: 18px; height: 18px; flex: none; }
+    .consent-terms:focus-visible { outline: 2px solid var(--primary); }
+    .consent-terms h2 { font-size: 1rem; color: var(--text-main); margin: 1.25rem 0 0.5rem; }
+    .consent-terms h2:first-child { margin-top: 0; }
+    .consent-terms ul { color: var(--text-muted); margin: 0 0 1rem 1.25rem; line-height: 1.6; }
+    .consent-terms p:last-child { margin-bottom: 0; }
 
     .btn {
       background-color: var(--primary);
@@ -536,20 +543,38 @@
     }
 
     function renderIntro() {
-      const btn = el("button", { class: "btn", disabled: true, text: "Start" });
-      const consent = el("input", { type: "checkbox", onchange: (e) => (btn.disabled = !e.target.checked) });
-      btn.addEventListener("click", () => {
-        status = "started";
-        session.startedAt = new Date().toISOString();
-        sessionStart = performance.now();
-        next();
-      });
       show(el("div", {},
         el("span", { class: "status-badge", text: "Study session" }),
         el("h1", { tabindex: -1, text: CFG.intro.heading }),
         el("div", { class: "prose", html: CFG.intro.html }),
-        el("label", { class: "consent" }, consent, el("span", { text: CFG.intro.consentLabel })),
-        btn));
+        el("button", { class: "btn", text: CFG.intro.startLabel || "Continue", onclick: CFG.consent ? renderConsent : beginSurvey })));
+    }
+
+    function renderConsent() {
+      const c = CFG.consent;
+      show(el("div", {},
+        el("span", { class: "status-badge", text: CFG.title || "" }),
+        el("h1", { tabindex: -1, text: c.heading || "Consent Terms" }),
+        el("div", { class: "consent-terms prose", tabindex: 0, role: "region", "aria-label": c.heading || "Consent Terms", html: c.html }),
+        el("button", { class: "btn", text: c.agreeLabel || "I agree", onclick: beginSurvey }),
+        el("button", { class: "btn secondary", text: c.declineLabel || "I do not agree", onclick: renderDeclined })));
+    }
+
+    // Nothing is sent to the Sheet for people who decline
+    function renderDeclined() {
+      const c = CFG.consent;
+      status = "declined";
+      show(el("div", {},
+        el("span", { class: "status-badge", text: CFG.title || "" }),
+        el("h1", { tabindex: -1, text: c.declinedHeading || "Survey ended" }),
+        el("div", { class: "prose", html: c.declinedHtml || "<p>You chose not to take part. No answers were recorded. You may close this tab.</p>" })));
+    }
+
+    function beginSurvey() {
+      status = "started";
+      session.startedAt = new Date().toISOString();
+      sessionStart = performance.now();
+      next();
     }
 
     function renderHeader(step) {
