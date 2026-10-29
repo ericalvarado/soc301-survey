@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="Arial, Helvetica, sans-serif">
+  <rect width="800" height="500" fill="#ffffff"/>
+  <text x="400" y="36" text-anchor="middle" font-size="22" font-weight="bold" fill="#111">Average hours of sleep per night, by class year</text>
+  <!-- axes: 0–9 h, 40 px per hour, baseline y=420 -->
+  <g stroke="#e5e7eb">
+    <line x1="100" y1="380" x2="760" y2="380"/><line x1="100" y1="340" x2="760" y2="340"/>
+    <line x1="100" y1="300" x2="760" y2="300"/><line x1="100" y1="260" x2="760" y2="260"/>
+    <line x1="100" y1="220" x2="760" y2="220"/><line x1="100" y1="180" x2="760" y2="180"/>
+    <line x1="100" y1="140" x2="760" y2="140"/><line x1="100" y1="60" x2="760" y2="60"/>
+  </g>
+  <line x1="100" y1="420" x2="760" y2="420" stroke="#111" stroke-width="2"/>
+  <line x1="100" y1="60" x2="100" y2="420" stroke="#111" stroke-width="2"/>
+  <g font-size="14" fill="#374151" text-anchor="end">
+    <text x="90" y="425">0</text><text x="90" y="345">2</text><text x="90" y="265">4</text>
+    <text x="90" y="185">6</text><text x="90" y="105">8</text>
+  </g>
+  <text x="30" y="240" font-size="15" fill="#374151" transform="rotate(-90 30 240)" text-anchor="middle">Hours</text>
+  <!-- recommended line at 8 h -->
+  <line x1="100" y1="100" x2="760" y2="100" stroke="#6b7280" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="755" y="92" font-size="14" fill="#6b7280" text-anchor="end">Recommended (8 h)</text>
+  <g fill="#3b82f6">
+    <rect x="140" y="132" width="100" height="288"/>
+    <rect x="300" y="144" width="100" height="276"/>
+    <rect x="460" y="160" width="100" height="260"/>
+    <rect x="620" y="176" width="100" height="244"/>
+  </g>
+  <g font-size="16" font-weight="bold" fill="#111" text-anchor="middle">
+    <text x="190" y="124">7.2</text><text x="350" y="136">6.9</text>
+    <text x="510" y="152">6.5</text><text x="670" y="168">6.1</text>
+  </g>
+  <g font-size="16" fill="#111" text-anchor="middle">
+    <text x="190" y="446">Freshmen</text><text x="350" y="446">Sophomores</text>
+    <text x="510" y="446">Juniors</text><text x="670" y="446">Seniors</text>
+  </g>
+  <text x="790" y="490" font-size="12" fill="#9ca3af" text-anchor="end">PLACEHOLDER: replace with your chart</text>
+</svg>

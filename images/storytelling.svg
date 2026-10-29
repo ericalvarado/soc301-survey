@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="Georgia, 'Times New Roman', serif">
+  <rect width="800" height="500" fill="#fffdf7"/>
+  <text x="40" y="50" font-size="28" font-weight="bold" fill="#111">Students lose about an hour of sleep by senior year</text>
+  <text x="40" y="80" font-size="17" fill="#555">Average hours of sleep per night. No class year reaches the recommended 8 hours.</text>
+  <!-- baseline y=440, 36 px per hour -->
+  <line x1="40" y1="152" x2="560" y2="152" stroke="#999" stroke-width="1.5" stroke-dasharray="4 5"/>
+  <text x="565" y="157" font-size="15" fill="#777" font-family="Arial, sans-serif">8 h recommended</text>
+  <g fill="#cbd5e1">
+    <rect x="60" y="181" width="90" height="259"/>
+    <rect x="180" y="192" width="90" height="248"/>
+    <rect x="300" y="206" width="90" height="234"/>
+  </g>
+  <rect x="420" y="220" width="90" height="220" fill="#dc2626"/>
+  <g font-family="Arial, sans-serif" font-size="17" text-anchor="middle" fill="#334155">
+    <text x="105" y="173">7.2</text><text x="225" y="184">6.9</text><text x="345" y="198">6.5</text>
+  </g>
+  <text x="465" y="212" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#dc2626">6.1</text>
+  <g font-family="Arial, sans-serif" font-size="15" text-anchor="middle" fill="#334155">
+    <text x="105" y="464">Freshmen</text><text x="225" y="464">Sophomores</text><text x="345" y="464">Juniors</text>
+  </g>
+  <text x="465" y="464" font-family="Arial, sans-serif" font-size="15" font-weight="bold" text-anchor="middle" fill="#dc2626">Seniors</text>
+  <!-- annotation -->
+  <path d="M590 250 C 560 250, 540 240, 518 236" fill="none" stroke="#dc2626" stroke-width="2"/>
+  <polygon points="514,236 526,230 524,242" fill="#dc2626"/>
+  <text x="598" y="244" font-size="18" fill="#111">Seniors sleep 6.1 hours,</text>
+  <text x="598" y="268" font-size="18" fill="#111">nearly 2 hours short</text>
+  <text x="598" y="292" font-size="18" fill="#111">of what's recommended.</text>
+  <text x="790" y="490" font-size="12" fill="#9ca3af" text-anchor="end" font-family="Arial, sans-serif">PLACEHOLDER: replace with your chart</text>
+</svg>

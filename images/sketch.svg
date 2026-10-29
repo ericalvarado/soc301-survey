@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="'Segoe Print', 'Bradley Hand', 'Comic Sans MS', cursive">
+  <rect width="800" height="500" fill="#fbfbf6"/>
+  <g stroke="#111" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- title underline -->
+    <path d="M150 62 C 300 58, 500 66, 650 60"/>
+    <!-- the "8 hours" goal line -->
+    <path d="M60 128 C 250 124, 520 132, 740 126" stroke-dasharray="14 10"/>
+    <!-- wobbly baseline -->
+    <path d="M60 420 C 250 424, 520 416, 740 421"/>
+    <!-- four "hours" stacks drawn as wobbly columns, heights 7.2 / 6.9 / 6.5 / 6.1 (36 px per hour) -->
+    <path d="M110 420 L 108 162 L 182 160 L 184 420"/>
+    <path d="M270 420 L 272 172 L 344 174 L 342 420"/>
+    <path d="M430 420 L 428 186 L 502 188 L 500 420"/>
+    <path d="M590 420 L 592 200 L 664 198 L 662 420"/>
+    <!-- stick figures on top of each column, getting droopier -->
+    <circle cx="146" cy="128" r="0" />
+    <circle cx="146" cy="116" r="14"/><path d="M146 130 L146 158 M132 142 L160 142"/>
+    <circle cx="308" cy="126" r="14"/><path d="M308 140 L308 170 M294 154 L322 150"/>
+    <circle cx="466" cy="140" r="14"/><path d="M466 154 L468 184 M452 170 L480 166"/>
+    <circle cx="628" cy="154" r="14"/><path d="M628 168 L630 196 M614 186 L642 180"/>
+    <!-- faces: happy → tired -->
+    <path d="M140 120 Q146 126 152 120" stroke-width="2.5"/>
+    <path d="M302 130 L314 130" stroke-width="2.5"/>
+    <path d="M460 146 Q466 141 472 146" stroke-width="2.5"/>
+    <path d="M622 160 Q628 154 634 160" stroke-width="2.5"/>
+    <!-- arrow showing the drop -->
+    <path d="M200 236 C 330 250, 480 280, 600 330" stroke-width="3"/>
+    <path d="M584 316 L600 330 L580 336" stroke-width="3"/>
+  </g>
+  <g fill="#111" font-size="24">
+    <text x="400" y="50" text-anchor="middle" font-size="28">Sleep shrinks every year</text>
+    <text x="745" y="118" text-anchor="end" font-size="20">goal: 8 hrs</text>
+    <text x="146" y="460" text-anchor="middle">Fresh</text>
+    <text x="308" y="460" text-anchor="middle">Soph</text>
+    <text x="466" y="460" text-anchor="middle">Junior</text>
+    <text x="628" y="460" text-anchor="middle">Senior</text>
+    <text x="146" y="300" text-anchor="middle" font-size="30">7.2</text>
+    <text x="308" y="310" text-anchor="middle" font-size="30">6.9</text>
+    <text x="466" y="320" text-anchor="middle" font-size="30">6.5</text>
+    <text x="628" y="380" text-anchor="middle" font-size="30">6.1</text>
+    <text x="420" y="236" font-size="20">−1 hr by senior year!</text>
+  </g>
+  <text x="790" y="492" font-size="12" fill="#9ca3af" text-anchor="end" font-family="Arial, sans-serif">PLACEHOLDER: replace with your chart</text>
+</svg>

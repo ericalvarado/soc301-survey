@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research Questionnaire</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --border: #334155;
+      --accent: #10b981;
+      --danger: #f87171;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+      user-select: none;
+    }
+
+    input, textarea { user-select: text; }
+
+    .container {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      max-width: 720px;
+      width: 100%;
+      padding: 2.5rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .screen { visibility: visible; }
+    .screen.loading { visibility: hidden; }
+
+    h1 {
+      font-size: 1.4rem;
+      line-height: 1.4;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      outline: none;
+    }
+
+    p, .prose p {
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .prose { margin-bottom: 2rem; }
+    .prose strong { color: var(--text-main); }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .status-badge {
+      display: inline-block;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .progress {
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .progress > div {
+      height: 100%;
+      background: var(--primary);
+    }
+
+    figure.chart {
+      margin-bottom: 1.5rem;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    figure.chart img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .thumb {
+      display: block;
+      width: 160px;
+      max-width: 50%;
+      border-radius: 6px;
+      background: #fff;
+      margin-bottom: 1rem;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background-color: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+      font-size: 1.05rem;
+    }
+
+    .option-label:hover {
+      background-color: rgba(59, 130, 246, 0.1);
+      border-color: var(--primary);
+    }
+
+    .option-label:has(input:checked) {
+      border-color: var(--primary);
+      background-color: rgba(59, 130, 246, 0.12);
+    }
+
+    .option-label input[type="radio"],
+    .option-label input[type="checkbox"] {
+      appearance: none;
+      flex: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      outline: none;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+    .option-label input[type="checkbox"] { border-radius: 4px; }
+
+    .option-label input:focus-visible { box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); }
+
+    .option-label input:checked { border-color: var(--primary); }
+
+    .option-label input:checked::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 10px;
+      height: 10px;
+      background-color: var(--primary);
+      border-radius: 50%;
+    }
+    .option-label input[type="checkbox"]:checked::after { border-radius: 2px; }
+
+    .opt-thumb {
+      width: 96px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+      background: #fff;
+      flex: none;
+    }
+
+    /* Likert: a row of buttons, stacked on narrow screens */
+    .likert {
+      display: grid;
+      grid-template-columns: repeat(var(--n), 1fr);
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    .likert .option-label {
+      flex-direction: column;
+      justify-content: flex-start;
+      text-align: center;
+      gap: 0.5rem;
+      padding: 0.85rem 0.5rem;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 560px) {
+      .container { padding: 1.5rem; }
+      .likert { grid-template-columns: 1fr; }
+      .likert .option-label { flex-direction: row; text-align: left; padding: 0.85rem 1rem; }
+    }
+
+    .field {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      font-size: 1.05rem;
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+    .field:focus { outline: none; border-color: var(--primary); }
+    textarea.field { min-height: 120px; resize: vertical; }
+    .other-field { margin: -0.25rem 0 0 2.25rem; width: calc(100% - 2.25rem); }
+    .hint { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; min-height: 1.2em; }
+    .hint.error { color: var(--danger); }
+
+    .consent {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      color: var(--text-main);
+      line-height: 1.5;
+      cursor: pointer;
+    }
+    .consent input { margin-top: 0.3rem; width: 18px; height: 18px; flex: none; }
+
+    .btn {
+      background-color: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 0.85rem 2rem;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.15s ease;
+    }
+    .btn:hover { background-color: var(--primary-hover); }
+    .btn:disabled {
+      background-color: var(--border);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    .btn.secondary { background: transparent; border: 1px solid var(--border); margin-top: 0.75rem; }
+
+    /* Answer reveal (sections with showAnswers: true) */
+    .option-label:has(input:disabled) { cursor: default; }
+    .option-label.is-correct { border-color: var(--accent); background-color: rgba(16, 185, 129, 0.15); }
+    .option-label.is-wrong:has(input) { border-color: var(--danger); background-color: rgba(248, 113, 113, 0.12); }
+    .feedback { font-weight: 600; margin: -1rem 0 1.5rem; }
+    .feedback.right { color: var(--accent); }
+    .feedback.wrong { color: var(--danger); }
+    .feedback span { font-weight: 400; color: var(--text-muted); }
+
+    .spinner {
+      margin: 1.5rem auto 0;
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <main class="container" id="app" aria-live="polite"></main>
+
+  <script src="survey-config.js"></script>
+  <script>
+  (() => {
+    "use strict";
+
+    const CFG = window.SURVEY;
+    const DEBUG = !!CFG.debug || new URLSearchParams(location.search).has("debug");
+    const PENDING_KEY = "survey_pending_submissions";
+    const app = document.getElementById("app");
+    if (CFG.title) document.title = CFG.title;
+
+    // ---------- helpers ----------
+    function el(tag, attrs = {}, ...children) {
+      const node = document.createElement(tag);
+      for (const [k, v] of Object.entries(attrs)) {
+        if (v == null || v === false) continue;
+        if (k === "class") node.className = v;
+        else if (k === "html") node.innerHTML = v;
+        else if (k === "text") node.textContent = v;
+        else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
+        else node.setAttribute(k, v === true ? "" : v);
+      }
+      for (const c of children.flat()) if (c != null) node.append(c);
+      return node;
+    }
+
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(16).slice(2) + Date.now().toString(16));
+
+    // Options can be plain strings or { value, label, image }
+    const normalizeOptions = (opts) =>
+      opts.map((o) => (typeof o === "string" ? { value: o, label: o } : { label: o.value, ...o }));
+
+    // ---------- session state ----------
+    const session = {
+      participantId: "P-" + uid().slice(0, 8),
+      configVersion: CFG.version || "",
+      startedAt: "",
+      completedAt: "",
+      totalMs: "",
+      formatOrder: "",
+      progress: "",
+      lastItem: "",
+      hiddenMsTotal: 0,
+      device: matchMedia("(pointer: coarse)").matches ? "touch" : "mouse",
+      screen: `${screen.width}x${screen.height}`,
+      viewport: `${innerWidth}x${innerHeight}`,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+      userAgent: navigator.userAgent,
+    };
+    const responses = {};
+    const scores = {};
+    let status = "not_started"; // started → submitting → complete | failed
+    let sessionStart = 0;
+    let current = null;         // timing state of the item on screen
+
+    // ---------- build the step list from the config ----------
+    function buildSteps() {
+      const steps = [];
+      let chartOrder = [];
+      const chartQuestions = {}; // charts section id -> [{ chart, q }]
+      const titled = CFG.sections.filter((s) => s.title);
+
+      for (const sec of CFG.sections) {
+        const timed = !!sec.timed;
+        const type = sec.type || "items";
+        if (sec.title) steps.push({ kind: "header", section: sec, part: titled.indexOf(sec) + 1, parts: titled.length });
+
+        if (type === "charts") {
+          chartOrder = sec.randomizeOrder === false ? sec.charts.slice() : shuffle(sec.charts);
+          session.formatOrder = chartOrder.map((c) => c.id).join(" > ");
+          chartQuestions[sec.id] = [];
+          chartOrder.forEach((chart, ci) => {
+            for (const q of chart.questions) {
+              chartQuestions[sec.id].push({ chart, q });
+              steps.push({
+                kind: "item", section: sec, key: `${sec.id}__${q.id}`, timed,
+                item: { type: "choice", letters: true, ...q, image: chart.image, imageAlt: chart.alt || chart.label },
+                meta: { format: chart.id, format_position: ci + 1 },
+              });
+            }
+          });
+        } else if (type === "perChartLikert") {
+          chartOrder.forEach((chart, ci) => steps.push({
+            kind: "item", section: sec, key: `${sec.id}__${chart.id}`, timed,
+            item: {
+              type: "likert", labels: sec.labels, scale: sec.scale,
+              prompt: sec.prompt.replace("{format}", chart.label.toLowerCase()),
+              thumbnail: chart.image, thumbnailAlt: chart.label,
+            },
+            meta: { format: chart.id, format_position: ci + 1 },
+          }));
+        } else if (type === "recall") {
+          let list = (chartQuestions[sec.from] || []).slice();
+          if (sec.shuffleQuestions) list = shuffle(list);
+          list.forEach(({ chart, q }, i) => steps.push({
+            kind: "item", section: sec, key: `${sec.id}__${q.id}`, timed,
+            item: { type: "choice", letters: true, ...q, shuffle: sec.shuffleAnswers !== false },
+            meta: { format: chart.id, recall_position: i + 1 },
+          }));
+        } else {
+          for (const it of sec.items) {
+            const item = { letters: timed, ...it };
+            if (it.options === "fromCharts") {
+              item.options = chartOrder.map((c) => ({ value: c.id, label: c.label, image: c.image }));
+              item.shuffle = it.shuffle !== false;
+              item.letters = false;
+            }
+            steps.push({ kind: "item", section: sec, key: `${sec.id}__${it.id}`, timed: it.timed ?? timed, item, meta: {} });
+          }
+        }
+      }
+      return steps;
+    }
+
+    const steps = buildSteps();
+    const totalItems = steps.filter((s) => s.kind === "item").length;
+    let stepIndex = -1;
+    let itemsDone = 0;
+
+    // Preload every image so load time never counts toward a response time
+    new Set(CFG.sections.flatMap((s) => (s.charts || []).map((c) => c.image))).forEach((src) => { new Image().src = src; });
+
+    // ---------- answer widgets ----------
+    // Each widget reports through `onChange(value, valid, isSelection)`.
+    function choiceWidget(item, state, onChange) {
+      const multi = item.type === "multi";
+      let opts = normalizeOptions(item.options);
+      if (item.shuffle) opts = shuffle(opts);
+      state.optionsShown = opts.map((o) => o.value);
+
+      const name = "q_" + uid().slice(0, 6);
+      const exclusive = item.exclusive || [];
+      const grid = el("div", { class: "options-grid", role: multi ? "group" : "radiogroup" });
+      let otherField = null;
+
+      opts.forEach((o, i) => {
+        const text = item.letters ? `${String.fromCharCode(65 + i)}. ${o.label}` : o.label;
+        grid.append(el("label", { class: "option-label" },
+          el("input", { type: multi ? "checkbox" : "radio", name, value: o.value }),
+          o.image ? el("img", { class: "opt-thumb", src: o.image, alt: "" }) : null,
+          el("span", { text })));
+        if (item.otherOption && o.value === item.otherOption) {
+          otherField = el("input", { class: "field other-field", type: "text", maxlength: 200, placeholder: "Please describe", hidden: true });
+          grid.append(otherField);
+        }
+      });
+
+      const inputs = [...grid.querySelectorAll("input[type=radio], input[type=checkbox]")];
+      const report = (isSelection) => {
+        const checked = inputs.filter((i) => i.checked).map((i) => i.value);
+        const otherPicked = item.otherOption && checked.includes(item.otherOption);
+        if (otherField) otherField.hidden = !otherPicked;
+        const otherText = otherField ? otherField.value.trim() : "";
+        const values = checked.map((v) => (v === item.otherOption && otherText ? `${v}: ${otherText}` : v));
+        const valid = checked.length > 0 && (!otherPicked || otherText.length > 0);
+        onChange(multi ? values : values[0], valid, isSelection);
+      };
+
+      grid.addEventListener("change", (e) => {
+        if (e.target === otherField) return;
+        if (multi && e.target.checked) {
+          const isExclusive = exclusive.includes(e.target.value);
+          inputs.forEach((i) => {
+            if (i !== e.target && (isExclusive || exclusive.includes(i.value))) i.checked = false;
+          });
+        }
+        report(true);
+        if (otherField && !otherField.hidden && e.target.value === item.otherOption) otherField.focus();
+      });
+      if (otherField) otherField.addEventListener("input", () => report(false));
+      return grid;
+    }
+
+    function likertWidget(item, state, onChange) {
+      const labels = item.labels || Array.from({ length: item.scale || 5 }, (_, i) => String(i + 1));
+      const name = "q_" + uid().slice(0, 6);
+      const grid = el("div", { class: "likert", role: "radiogroup", style: `--n:${labels.length}` });
+      labels.forEach((label, i) => grid.append(el("label", { class: "option-label" },
+        el("input", { type: "radio", name, value: i + 1 }),
+        el("span", { text: label }))));
+      grid.addEventListener("change", (e) => onChange(Number(e.target.value), true, true));
+      return grid;
+    }
+
+    function numberWidget(item, state, onChange) {
+      const input = el("input", { class: "field", type: "number", inputmode: "numeric", min: item.min, max: item.max, step: 1 });
+      const hint = el("div", { class: "hint" });
+      input.addEventListener("input", () => {
+        const raw = input.value.trim();
+        const n = Number(raw);
+        const valid = raw !== "" && Number.isInteger(n) && (item.min == null || n >= item.min) && (item.max == null || n <= item.max);
+        hint.textContent = raw && !valid ? `Please enter a whole number${item.min != null ? ` from ${item.min}` : ""}${item.max != null ? ` to ${item.max}` : ""}.` : "";
+        hint.classList.toggle("error", !!hint.textContent);
+        onChange(valid ? n : null, valid, false);
+      });
+      setTimeout(() => input.focus(), 0);
+      return el("div", {}, input, hint);
+    }
+
+    function textWidget(item, state, onChange) {
+      const input = el("textarea", { class: "field", maxlength: item.maxLength || 1000, rows: 4 });
+      input.addEventListener("input", () => {
+        const v = input.value.trim();
+        onChange(v, item.optional || v.length > 0, false);
+      });
+      if (item.optional) queueMicrotask(() => onChange("", true, null)); // null = initial state, not an interaction
+      return el("div", { style: "margin-bottom:1.5rem" }, input);
+    }
+
+    const WIDGETS = { choice: choiceWidget, multi: choiceWidget, likert: likertWidget, number: numberWidget, text: textWidget };
+
+    // ---------- timing: tab switches / focus loss while an item is on screen ----------
+    document.addEventListener("visibilitychange", () => {
+      const s = current;
+      if (!s || s.tStart == null) return;
+      const now = performance.now();
+      if (document.hidden) s.hiddenSince = now;
+      else if (s.hiddenSince != null) { s.hiddenMs += now - s.hiddenSince; s.hiddenSince = null; }
+    });
+    window.addEventListener("blur", () => { if (current && current.tStart != null) current.blurCount++; });
+
+    // ---------- screens ----------
+    function show(screen, { waitForImages = false, onReady } = {}) {
+      screen.classList.add("screen");
+      app.replaceChildren(screen);
+      window.scrollTo(0, 0);
+      let done = false;
+      const reveal = () => {
+        if (done) return;
+        done = true;
+        screen.classList.remove("loading");
+        screen.querySelector("h1")?.focus({ preventScroll: true });
+        onReady?.();
+      };
+      // Two frames = after paint. The timeout covers browsers that pause animation frames.
+      const ready = () => {
+        requestAnimationFrame(() => requestAnimationFrame(reveal));
+        setTimeout(reveal, 200);
+      };
+      if (!waitForImages) return ready();
+      screen.classList.add("loading");
+      const imgs = [...screen.querySelectorAll("img")];
+      Promise.all(imgs.map((img) => img.decode().then(() => true, () => false))).then((ok) => {
+        if (ok.includes(false)) screen.dataset.imageError = "1";
+        ready();
+      });
+    }
+
+    function renderIntro() {
+      const btn = el("button", { class: "btn", disabled: true, text: "Start" });
+      const consent = el("input", { type: "checkbox", onchange: (e) => (btn.disabled = !e.target.checked) });
+      btn.addEventListener("click", () => {
+        status = "started";
+        session.startedAt = new Date().toISOString();
+        sessionStart = performance.now();
+        next();
+      });
+      show(el("div", {},
+        el("span", { class: "status-badge", text: "Study session" }),
+        el("h1", { tabindex: -1, text: CFG.intro.heading }),
+        el("div", { class: "prose", html: CFG.intro.html }),
+        el("label", { class: "consent" }, consent, el("span", { text: CFG.intro.consentLabel })),
+        btn));
+    }
+
+    function renderHeader(step) {
+      const sec = step.section;
+      show(el("div", {},
+        el("span", { class: "status-badge", text: `Part ${step.part} of ${step.parts}` }),
+        el("h1", { tabindex: -1, text: sec.title }),
+        el("div", { class: "prose" }, sec.description ? el("p", { text: sec.description }) : null),
+        el("button", { class: "btn", text: "Continue", onclick: next })));
+    }
+
+    function renderItem(step) {
+      const { item } = step;
+      const state = { step, tStart: null, tFirst: null, selections: 0, hiddenMs: 0, hiddenSince: null, blurCount: 0, value: null, optionsShown: null };
+      current = state;
+
+      const isLast = itemsDone + 1 === totalItems;
+      const nextBtn = el("button", { class: "btn", disabled: true, text: isLast ? "Finish" : "Next" });
+      const widget = WIDGETS[item.type](item, state, (value, valid, isSelection) => {
+        if (state.tStart != null && state.tFirst == null && isSelection !== null) state.tFirst = performance.now();
+        if (isSelection) state.selections++;
+        state.value = value;
+        nextBtn.disabled = !valid;
+      });
+
+      const screen = el("div", {},
+        el("div", { class: "status-row" },
+          el("span", { class: "status-badge", text: step.section.title || "" }),
+          el("span", { class: "status-badge", text: `Question ${itemsDone + 1} of ${totalItems}` })),
+        el("div", { class: "progress" }, el("div", { style: `width:${(itemsDone / totalItems) * 100}%` })),
+        item.image ? el("figure", { class: "chart" }, el("img", { src: item.image, alt: item.imageAlt || "" })) : null,
+        item.thumbnail ? el("img", { class: "thumb", src: item.thumbnail, alt: item.thumbnailAlt || "" }) : null,
+        el("h1", { tabindex: -1, text: item.prompt }),
+        item.help ? el("p", { text: item.help }) : null,
+        widget,
+        nextBtn);
+
+      nextBtn.addEventListener("click", () => {
+        if (state.tStart == null || nextBtn.disabled || state.recorded) return;
+        state.recorded = true;
+        nextBtn.disabled = true;
+        const rec = record(state, screen.dataset.imageError === "1");
+        if (step.section.showAnswers && item.correct !== undefined) revealAnswer(screen, item, rec, nextBtn);
+        else next();
+      });
+
+      // The clock starts once the screen (and its chart, if any) is actually painted
+      show(screen, {
+        waitForImages: true,
+        onReady: () => {
+          state.tStart = performance.now();
+          if (document.hidden) state.hiddenSince = state.tStart;
+        },
+      });
+    }
+
+    function record(state, imageError) {
+      const { step } = state;
+      const { item } = step;
+      const now = performance.now();
+      if (state.hiddenSince != null) { state.hiddenMs += now - state.hiddenSince; state.hiddenSince = null; }
+
+      const rec = {
+        answer: Array.isArray(state.value) ? state.value.join("; ") : state.value ?? "",
+        timed: step.timed ? 1 : 0,
+        ms_total: Math.round(now - state.tStart),
+        ms_first: state.tFirst != null ? Math.round(state.tFirst - state.tStart) : "",
+        changes: Math.max(0, state.selections - 1),
+        hidden_ms: Math.round(state.hiddenMs),
+        blur_count: state.blurCount,
+        ...step.meta,
+      };
+      if (item.correct !== undefined) {
+        rec.correct = String(state.value) === String(item.correct) ? 1 : 0;
+        const scoreKey = step.meta.format ? `${step.section.id}__${step.meta.format}` : step.section.id;
+        scores[scoreKey] = (scores[scoreKey] || 0) + rec.correct;
+      }
+      if (item.shuffle && state.optionsShown) rec.options_shown = state.optionsShown.join(" | ");
+      if (imageError) rec.image_error = 1;
+
+      responses[step.key] = rec;
+      session.hiddenMsTotal += rec.hidden_ms;
+      itemsDone++;
+      session.progress = `${itemsDone}/${totalItems}`;
+      session.lastItem = step.key;
+      current = null;
+      if (DEBUG) console.log(step.key, rec);
+      return rec;
+    }
+
+    // Shown after the response time is already recorded, so it doesn't count toward ms_total
+    function revealAnswer(screen, item, rec, btn) {
+      screen.querySelectorAll(".options-grid input").forEach((input) => {
+        input.disabled = true;
+        const label = input.closest(".option-label");
+        if (input.value === String(item.correct)) label.classList.add("is-correct");
+        else if (input.checked) label.classList.add("is-wrong");
+      });
+      const correctText = normalizeOptions(item.options).find((o) => o.value === String(item.correct))?.label ?? item.correct;
+      btn.before(el("p", {
+        class: "feedback " + (rec.correct ? "right" : "wrong"),
+        text: rec.correct ? "Correct!" : `Not quite. The answer is ${correctText}.`,
+      }, item.explanation ? el("span", { text: " " + item.explanation }) : null));
+      btn.textContent = "Continue";
+      btn.disabled = false;
+      btn.addEventListener("click", next, { once: true });
+    }
+
+    function next() {
+      stepIndex++;
+      if (stepIndex >= steps.length) return finish();
+      const step = steps[stepIndex];
+      if (step.kind === "header") renderHeader(step);
+      else renderItem(step);
+    }
+
+    // ---------- submission ----------
+    function buildPayload(payloadStatus) {
+      return { participantId: session.participantId, status: payloadStatus, session, scores, responses };
+    }
+
+    async function send(data, attempts = 3) {
+      const body = JSON.stringify(data);
+      for (let i = 0; i < attempts; i++) {
+        try {
+          // no-cors + text/plain: Apps Script accepts it without a CORS preflight. The response
+          // is opaque, so a resolved fetch means "delivered"; only network errors reject.
+          await fetch(CFG.scriptUrl, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body,
+            keepalive: body.length < 60000,
+          });
+          return true;
+        } catch (err) {
+          console.warn(`Submission attempt ${i + 1} failed`, err);
+          if (i < attempts - 1) await wait(1000 * 2 ** i);
+        }
+      }
+      return false;
+    }
+
+    function readPending() {
+      try { return JSON.parse(localStorage.getItem(PENDING_KEY) || "[]"); } catch { return []; }
+    }
+    function writePending(list) {
+      try { list.length ? localStorage.setItem(PENDING_KEY, JSON.stringify(list)) : localStorage.removeItem(PENDING_KEY); } catch {}
+    }
+
+    // Re-send anything a previous visit on this browser couldn't deliver
+    async function flushPending() {
+      const list = readPending();
+      if (!list.length) return;
+      const remaining = [];
+      for (const data of list) if (!(await send(data, 1))) remaining.push(data);
+      writePending(remaining);
+    }
+
+    async function finish() {
+      session.completedAt = new Date().toISOString();
+      session.totalMs = Math.round(performance.now() - sessionStart);
+      session.viewport = `${innerWidth}x${innerHeight}`;
+      status = "submitting";
+      const data = buildPayload("complete");
+      if (DEBUG) console.log("Payload", data);
+
+      show(el("div", {},
+        el("h1", { tabindex: -1, text: "Recording your responses…" }),
+        el("p", { text: "Please don't close this window." }),
+        el("div", { class: "spinner" })));
+
+      if (await send(data)) {
+        status = "complete";
+        renderDone();
+      } else {
+        status = "failed";
+        writePending([...readPending(), data]);
+        renderFailed(data);
+      }
+    }
+
+    function renderDone() {
+      show(el("div", {},
+        el("span", { class: "status-badge", style: "color: var(--accent);", text: "Completed" }),
+        el("h1", { tabindex: -1, text: CFG.debrief.heading }),
+        el("div", { class: "prose", html: CFG.debrief.html }),
+        CFG.contact ? el("p", { text: `Questions about this study: ${CFG.contact}` }) : null));
+    }
+
+    function renderFailed(data) {
+      const code = el("textarea", { class: "field", readonly: true, rows: 5, style: "font-family: monospace; font-size: 0.75rem;" });
+      code.value = JSON.stringify(data);
+      const retry = el("button", { class: "btn", text: "Try again" });
+      retry.addEventListener("click", async () => {
+        retry.disabled = true;
+        retry.textContent = "Sending…";
+        if (await send(data)) {
+          writePending(readPending().filter((d) => d.participantId !== data.participantId));
+          status = "complete";
+          renderDone();
+        } else {
+          retry.disabled = false;
+          retry.textContent = "Try again";
+        }
+      });
+      const copy = el("button", { class: "btn secondary", text: "Copy response code" });
+      copy.addEventListener("click", async () => {
+        try { await navigator.clipboard.writeText(code.value); copy.textContent = "Copied"; }
+        catch { code.select(); }
+      });
+      show(el("div", {},
+        el("span", { class: "status-badge", style: "color: var(--danger);", text: "Not sent yet" }),
+        el("h1", { tabindex: -1, text: "We couldn't reach the server" }),
+        el("p", { text: "Your answers are saved in this browser and will be sent automatically next time this page is opened. You can also try again now, or copy the code below" + (CFG.contact ? ` and email it to ${CFG.contact}.` : ".") }),
+        code, retry, copy));
+    }
+
+    // ---------- navigation guards ----------
+    // Disable the browser Back button
+    history.pushState(null, "", location.href);
+    window.addEventListener("popstate", () => history.pushState(null, "", location.href));
+
+    // Warn before leaving mid-survey
+    window.addEventListener("beforeunload", (e) => {
+      if (status !== "started" && status !== "submitting") return;
+      e.preventDefault();
+      e.returnValue = "";
+    });
+
+    // If they leave anyway, send what we have as a partial response
+    window.addEventListener("pagehide", () => {
+      if (status !== "started" || itemsDone === 0) return;
+      try {
+        const blob = new Blob([JSON.stringify(buildPayload("partial"))], { type: "text/plain;charset=utf-8" });
+        navigator.sendBeacon(CFG.scriptUrl, blob);
+      } catch {}
+    });
+
+    if (DEBUG) console.log("Steps", steps);
+    flushPending();
+    renderIntro();
+  })();
+  </script>
+</body>
+</html>
